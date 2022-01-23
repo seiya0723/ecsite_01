@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>グループ作成</title>
+</head>
+<body>
+
+ <form action="{% url 'goods:group_create' %}" method="POST">
+   {% csrf_token %}
+     <div class="Form-Item">
+    <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>グループ</p>
+    <input type="text" name="name" class="Form-Item-Input">
+     </div>
+   <input type="submit" value="保存">
+ </form>
+
+
+ <!--↓ TODO:urlとして、goods:goods_create を指定。-->
+<form action="{% url 'goods:goods_create' %}"  method="POST">
+    {% csrf_token %}
+    <div class="Form">
+        <div class="Form-Item">
+            <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>商品名</p>
+            <input type="text" name="name" class="Form-Item-Input">
+        </div>
+        <div class="Form-Item">
+            <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>値段</p>
+            <input type="number" name="price" min="0" class="Form-Item-Input">
+        </div>
+        <div class="Form-Item">
+            <p class="Form-Item-Label"><span class="Form-Item-Label-Required">必須</span>画像</p>
+            <input type="file" name="image" class="Form-Item-Input">
+        </div>
+        <div class="Form-Item">
+            <p class="Form-Item-Label isMsg"><span class="Form-Item-Label-Required">必須</span>説明</p>
+            <textarea name="description" class="Form-Item-Textarea"></textarea>
+        </div>
+        <div class="Form-Item">
+            <p class="Form-Item-Label isMsg"><span class="Form-Item-Label-Required">必須</span>商品カテゴリー</p>
+            <!--TODO:ここのname属性はcategoryではなくgroup-->
+            <select name="group">
+                <option value="">未分類</option>
+                {% for group in groups %}
+                <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <!--TODO:release_dateを追加する。2022-01-22 を記入して送信。 -->
+        <input type="text" name="release_date">
+        <input type="submit" class="Form-Btn" value="保存">
+    </div>
+</form>
+
+<p>グッズ一覧。</p>
+
+{% for good in goods %}
+<div>{{ good.group|default:"未分類" }}</div>
+<div>{{ good.name         }}</div>
+<div>{{ good.price        }}</div>
+<div>{{ good.release_date }}</div>
+<div>{{ good.description  }}</div>
+<div>{{ good.image        }}</div>
+{% endfor %}
+
+
+<p>グループ一覧。</p>
+
+
+{% for group in groups %}
+<div>{{ group.name }}</div>
+{% endfor %}
+
+
+</body>
+</html>
+
